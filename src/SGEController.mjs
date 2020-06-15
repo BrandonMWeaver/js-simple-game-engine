@@ -12,6 +12,11 @@ class SGEController {
 			self.keys[e.keyCode] = false;
 		});
 	}
+
+	respond(keyCode, callback) {
+		if (this.keys[keyCode])
+			callback();
+	}
 }
 
 export default SGEController;
