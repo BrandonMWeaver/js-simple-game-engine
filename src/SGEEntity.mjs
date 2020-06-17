@@ -37,9 +37,22 @@ class SGEEntity {
 			this.perimeter.left <= entity.perimeter.right &&
 			this.perimeter.right >= entity.perimeter.left)
 			side = "bottom";
+		else
+			side = "none";
 		return side;
 	}
 
+	collidedWithAny(entities, prerequisite = null) {
+		if (prerequisite)
+			prerequisite();
+		for (const entity of entities) {
+			let collisionInformation = { entity: entity, side: this.collidedWith(entity) }
+			if (collisionInformation.side !== "none")
+				return collisionInformation;
+		}
+		return { entity: null, side: "none" }
+	}
+	
 	get perimeter() {
 		return {
 			left: this.x,
