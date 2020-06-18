@@ -42,17 +42,17 @@ class SGEEntity {
 		return side;
 	}
 
-	collidedWithAny(entities, prerequisite = null) {
-		if (prerequisite)
-			prerequisite();
+	collidedWithAny(entities) {
+		let collisionInformation = [];
 		for (const entity of entities) {
-			let collisionInformation = { entity: entity, side: this.collidedWith(entity) }
-			if (collisionInformation.side !== "none")
-				return collisionInformation;
+			let side = this.collidedWith(entity);
+			if (side !== "none") {
+				collisionInformation.push(side);
+			}
 		}
-		return { entity: null, side: "none" }
+		return collisionInformation;
 	}
-	
+
 	get perimeter() {
 		return {
 			left: this.x,
