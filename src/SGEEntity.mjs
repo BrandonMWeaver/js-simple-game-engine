@@ -14,9 +14,22 @@ class SGEEntity {
 		this.y += this.ySpeed;
 	}
 
-	update() {
+	update(degree = null) {
 		this.move();
-		this.context.drawImage(this.texture, this.x, this.y, this.texture.width, this.texture.height);
+		if (degree) {
+			this.rotate(degree);
+			this.context.drawImage(this.texture, this.texture.width / -2, this.texture.height / -2, this.texture.width, this.texture.height);
+			this.context.restore();
+		}
+		else {
+			this.context.drawImage(this.texture, this.x, this.y, this.texture.width, this.texture.height);
+		}
+	}
+
+	rotate(degree) {
+		this.context.save();
+		this.context.translate(this.x + this.texture.width / 2, this.y + this.texture.height / 2);
+		this.context.rotate(degree * Math.PI / 180);
 	}
 
 	collidedWith(entity) {
