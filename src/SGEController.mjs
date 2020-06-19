@@ -1,6 +1,10 @@
 class SGEController {
 	constructor() {
 		this.keys = [];
+		this.mouse = {
+			x: 0,
+			y: 0
+		}
 		this.initialize(this);
 	}
 
@@ -10,6 +14,11 @@ class SGEController {
 		});
 		window.addEventListener("keyup", e => {
 			self.keys[e.keyCode] = false;
+		});
+		window.addEventListener("mousemove", e => {
+			const canvas = document.querySelector("canvas")
+			this.mouse.x = e.pageX - canvas.offsetLeft;
+			this.mouse.y = e.pageY - canvas.offsetTop;
 		});
 	}
 

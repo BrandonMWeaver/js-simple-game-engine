@@ -28,8 +28,8 @@ class SGEEntity {
 
 	rotate(degree) {
 		this.context.save();
-		this.context.translate(this.x + this.texture.width / 2, this.y + this.texture.height / 2);
-		this.context.rotate(degree * Math.PI / 180);
+		this.context.translate(this.center.x, this.center.y);
+		this.context.rotate(degree);
 	}
 
 	collidedWith(entity) {
@@ -73,6 +73,10 @@ class SGEEntity {
 			top: this.y,
 			bottom: this.y + this.texture.height
 		}
+	}
+
+	get center() {
+		return { x: this.x + this.texture.width / 2, y: this.y + this.texture.height / 2 }
 	}
 }
 
