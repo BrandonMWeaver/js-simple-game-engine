@@ -5,6 +5,7 @@ class SGEEntity {
 		this.texture.src = texture;
 		this.x = x;
 		this.y = y;
+		this.rotation = 0;
 		this.Speed = speed;
 		this.xSpeed = speed;
 		this.ySpeed = speed;
@@ -28,6 +29,7 @@ class SGEEntity {
 			this.move();
 		}
 		if (degree) {
+			this.rotation = degree * 180 / Math.PI;
 			this.rotate(degree);
 			this.context.drawImage(this.texture, this.texture.width / -2, this.texture.height / -2, this.texture.width, this.texture.height);
 			this.context.restore();

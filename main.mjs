@@ -14,7 +14,7 @@ const enemies = [
 
 const controller = new SGEController();
 
-engineCanvas.start(update);
+engineCanvas.start(update, 5);
 
 function update() {
 	respondToAction();
@@ -22,8 +22,8 @@ function update() {
 	ship.update(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y)), function() {
 		if ((ship.center.x - controller.mouse.x - 20 > 10 || ship.center.x - controller.mouse.x < -10)
 		|| (ship.center.y - controller.mouse.y - 20 > 10 || ship.center.y - controller.mouse.y < -10)) {
-			ship.x += Math.sin(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y))) * ship.speed;
-			ship.y -= Math.cos(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y))) * ship.speed;
+			ship.x += Math.sin(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y))) * ship.xSpeed;
+			ship.y -= Math.cos(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y))) * ship.ySpeed;
 		}
 	});
 	for (const enemy of enemies) {
@@ -32,8 +32,16 @@ function update() {
 }
 
 function respondToAction() {
-	ship.speed = 0;
+	ship.xSpeed = 0;
+	ship.ySpeed = 0;
 	controller.respond(87, function() {
-		ship.speed = 4;
+		if ((ship.perimeter.left > background.perimeter.left || Math.sign(ship.rotation) === 1)
+		&& (ship.perimeter.right < background.perimeter.right || Math.sign(ship.rotation) === -1)) {
+			ship.xSpeed = 1;
+		}
+		if ((ship.perimeter.top > background.perimeter.top || !(ship.rotation >= -90 && ship.rotation <= 90))
+		&& (ship.perimeter.bottom < background.perimeter.bottom || (ship.rotation >= -90 && ship.rotation <= 90))) {
+			ship.ySpeed = 1;
+		}
 	});
 }

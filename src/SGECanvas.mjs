@@ -10,9 +10,9 @@ class SGECanvas {
 		container.append(this.canvas);
 	}
 
-	start(update) {
+	start(update, interval = 20) {
 		if (!this.interval)
-			this.interval = setInterval(update, 20);
+			this.interval = setInterval(update, interval);
 	}
 
 	stop() {
