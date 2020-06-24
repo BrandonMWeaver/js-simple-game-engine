@@ -11,6 +11,8 @@ const enemies = [
 	new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 620, 300),
 	new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 660, 340)
 ];
+const bullets = [];
+let delay = 0;
 
 const controller = new SGEController();
 
@@ -19,6 +21,12 @@ engineCanvas.start(update, 5);
 function update() {
 	respondToAction();
 	background.update();
+	for (const bullet of bullets) {
+		bullet.update(bullet.rotation, function() {
+			bullet.x += Math.sin(bullet.rotation) * bullet.xSpeed;
+			bullet.y -= Math.cos(bullet.rotation) * bullet.ySpeed;
+		});
+	}
 	ship.update(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y)), function() {
 		if ((ship.center.x - controller.mouse.x - 20 > 10 || ship.center.x - controller.mouse.x < -10)
 		|| (ship.center.y - controller.mouse.y - 20 > 10 || ship.center.y - controller.mouse.y < -10)) {
@@ -29,6 +37,8 @@ function update() {
 	for (const enemy of enemies) {
 		enemy.update();
 	}
+	if (delay > 0)
+		delay--;
 }
 
 function respondToAction() {
@@ -42,6 +52,20 @@ function respondToAction() {
 		if ((ship.perimeter.top > background.perimeter.top || !(ship.rotation >= -90 && ship.rotation <= 90))
 		&& (ship.perimeter.bottom < background.perimeter.bottom || (ship.rotation >= -90 && ship.rotation <= 90))) {
 			ship.ySpeed = 1;
+		}
+	});
+	controller.respond(32, function() {
+		if (delay === 0) {
+			bullets.push(
+				new SGEEntity(
+					engineCanvas.context,
+					"./textures/bullet.png",
+					ship.center.x - 2, ship.center.y - 4, ship.rotation,
+					3,
+					{ x: controller.mouse.x + 10, y: controller.mouse.y + 10 }
+				)
+			);
+			delay = 50;
 		}
 	});
 }

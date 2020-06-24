@@ -1,14 +1,17 @@
 class SGEEntity {
-	constructor(context, texture, x = 0, y = 0, speed = 0) {
+	constructor(context, texture, x = 0, y = 0, rotation = 0, speed = 0, destination = null) {
 		this.context = context;
 		this.texture = new Image();
 		this.texture.src = texture;
 		this.x = x;
 		this.y = y;
-		this.rotation = 0;
+		this.rotation = rotation;
 		this.Speed = speed;
 		this.xSpeed = speed;
 		this.ySpeed = speed;
+		if (destination) {
+			this.destination = destination;
+		}
 	}
 
 	move(callback = null) {
@@ -29,7 +32,7 @@ class SGEEntity {
 			this.move();
 		}
 		if (degree) {
-			this.rotation = degree * 180 / Math.PI;
+			this.rotation = degree;
 			this.rotate(degree);
 			this.context.drawImage(this.texture, this.texture.width / -2, this.texture.height / -2, this.texture.width, this.texture.height);
 			this.context.restore();
