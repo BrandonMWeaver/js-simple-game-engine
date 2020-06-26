@@ -26,6 +26,11 @@ function update() {
 			bullet.x += Math.sin(bullet.rotation) * bullet.xSpeed;
 			bullet.y -= Math.cos(bullet.rotation) * bullet.ySpeed;
 		});
+		for (let i = enemies.length - 1; i >= 0; i--) {
+			if (bullet.collidedWith(enemies[i])) {
+				enemies.splice(i, 1);
+			}
+		}
 	}
 	ship.update(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y)), function() {
 		if ((ship.center.x - controller.mouse.x - 20 > 10 || ship.center.x - controller.mouse.x < -10)
@@ -45,12 +50,12 @@ function respondToAction() {
 	ship.xSpeed = 0;
 	ship.ySpeed = 0;
 	controller.respond(87, function() {
-		if ((ship.perimeter.left > background.perimeter.left || Math.sign(ship.rotation) === 1)
-		&& (ship.perimeter.right < background.perimeter.right || Math.sign(ship.rotation) === -1)) {
+		if ((ship.perimeter.left > background.perimeter.left || Math.sign(ship.rotation * 180 / Math.PI) === 1)
+		&& (ship.perimeter.right < background.perimeter.right || Math.sign(ship.rotation * 180 / Math.PI) === -1)) {
 			ship.xSpeed = 1;
 		}
-		if ((ship.perimeter.top > background.perimeter.top || !(ship.rotation >= -90 && ship.rotation <= 90))
-		&& (ship.perimeter.bottom < background.perimeter.bottom || (ship.rotation >= -90 && ship.rotation <= 90))) {
+		if ((ship.perimeter.top > background.perimeter.top || !(ship.rotation * 180 / Math.PI >= -90 && ship.rotation * 180 / Math.PI <= 90))
+		&& (ship.perimeter.bottom < background.perimeter.bottom || (ship.rotation * 180 / Math.PI >= -90 && ship.rotation * 180 / Math.PI <= 90))) {
 			ship.ySpeed = 1;
 		}
 	});
@@ -60,7 +65,7 @@ function respondToAction() {
 				new SGEEntity(
 					engineCanvas.context,
 					"./textures/bullet.png",
-					ship.center.x - 2, ship.center.y - 4, ship.rotation,
+					ship.center.x - 2 + (Math.sin(ship.rotation) * 20), ship.center.y - 4 - (Math.cos(ship.rotation) * 20), ship.rotation,
 					3,
 					{ x: controller.mouse.x + 10, y: controller.mouse.y + 10 }
 				)

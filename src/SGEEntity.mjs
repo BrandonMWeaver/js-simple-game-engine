@@ -49,6 +49,13 @@ class SGEEntity {
 	}
 
 	collidedWith(entity) {
+		return this.perimeter.bottom < entity.perimeter.top ||
+		this.perimeter.top > entity.perimeter.bottom ||
+		this.perimeter.right < entity.perimeter.left ||
+		this.perimeter.left > entity.perimeter.right ? false : true;
+	}
+
+	sideCollidedWith(entity) {
 		let side = '';
 		if (this.perimeter.left === entity.perimeter.right &&
 			this.perimeter.top <= entity.perimeter.bottom &&
@@ -71,10 +78,10 @@ class SGEEntity {
 		return side;
 	}
 
-	collidedWithAny(entities) {
+	sideCollidedWithAny(entities) {
 		let collisionInformation = [];
 		for (const entity of entities) {
-			let side = this.collidedWith(entity);
+			let side = this.sideCollidedWith(entity);
 			if (side !== "none") {
 				collisionInformation.push(side);
 			}
