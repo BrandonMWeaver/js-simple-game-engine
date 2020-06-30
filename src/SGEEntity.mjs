@@ -57,24 +57,20 @@ class SGEEntity {
 
 	sideCollidedWith(entity) {
 		let side = '';
-		if (this.perimeter.left === entity.perimeter.right &&
-			this.perimeter.top <= entity.perimeter.bottom &&
-			this.perimeter.bottom >= entity.perimeter.top)
-			side = "left";
-		else if (this.perimeter.right === entity.perimeter.left &&
-			this.perimeter.top <= entity.perimeter.bottom &&
-			this.perimeter.bottom >= entity.perimeter.top)
-			side = "right";
-		else if (this.perimeter.top === entity.perimeter.bottom &&
-			this.perimeter.left <= entity.perimeter.right &&
-			this.perimeter.right >= entity.perimeter.left)
-			side = "top";
-		else if (this.perimeter.bottom === entity.perimeter.top &&
-			this.perimeter.left <= entity.perimeter.right &&
-			this.perimeter.right >= entity.perimeter.left)
-			side = "bottom";
-		else
-			side = "none";
+		if (this.collidedWith(entity)) {
+			const leftCollision = this.perimeter.right - entity.perimeter.left;
+			const rightCollision = entity.perimeter.right - this.perimeter.left;
+			const topCollision = this.perimeter.bottom - entity.perimeter.top;
+			const bottomCollision = entity.perimeter.bottom - this.perimeter.top;
+			if (rightCollision < leftCollision && rightCollision < topCollision && rightCollision < bottomCollision)
+				side = "left";
+			else if (leftCollision < rightCollision && leftCollision < topCollision && leftCollision < bottomCollision)
+				side = "right";
+			else if (bottomCollision < leftCollision && bottomCollision < rightCollision && bottomCollision < topCollision)
+				side = "top";
+			else if (topCollision < leftCollision && topCollision < rightCollision && topCollision < bottomCollision)
+				side = "bottom";
+			}
 		return side;
 	}
 
@@ -82,7 +78,7 @@ class SGEEntity {
 		let collisionInformation = [];
 		for (const entity of entities) {
 			let side = this.sideCollidedWith(entity);
-			if (side !== "none") {
+			if (side !== '') {
 				collisionInformation.push(side);
 			}
 		}
