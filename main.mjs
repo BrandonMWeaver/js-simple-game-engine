@@ -36,6 +36,7 @@ function update() {
 			}
 		}
 	}
+	ray.update();
 	ship.update(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y)), function() {
 		if ((ship.center.x - controller.mouse.x - 20 > 10 || ship.center.x - controller.mouse.x < -10)
 		|| (ship.center.y - controller.mouse.y - 20 > 10 || ship.center.y - controller.mouse.y < -10)) {
@@ -77,11 +78,11 @@ function update() {
 	}
 	const pt = ray.findClosestPoint(pts);
 	if (pt) {
-		intersection.x = pt.x - 10;
-		intersection.y = pt.y - 10;
-		intersection.update();
+		intersection.update(null, function() {
+			intersection.x = pt.x - 10;
+			intersection.y = pt.y - 10;
+		});
 	}
-	ray.update();
 	crosshair.update(null, function() {
 		crosshair.x = controller.mouse.x;
 		crosshair.y = controller.mouse.y;

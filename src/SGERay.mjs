@@ -3,12 +3,20 @@ class SGERay {
 		this.context = context;
 		this.pos = pos;
 		this.dir = dir;
+		this.point = {
+			found: false,
+			x: 0,
+			y: 0
+		}
 	}
 
 	update() {
 		this.context.beginPath();
 		this.context.moveTo(this.pos.x, this.pos.y);
-		this.context.lineTo(this.dir.x, this.dir.y);
+		if (this.point.found)
+			this.context.lineTo(this.point.x, this.point.y);
+		else
+			this.context.lineTo(this.dir.x, this.dir.y);
 		this.context.strokeStyle = "#00F"; // Remove after testing
 		this.context.stroke();
 	}
@@ -49,6 +57,13 @@ class SGERay {
 				closestPoint = point;
 			}
 		}
+		if (closestPoint) {
+			this.point.found = true;
+			this.point.x = closestPoint.x;
+			this.point.y = closestPoint.y;
+		}
+		else
+			this.point.found = false;
 		return closestPoint;
 	}
 }
