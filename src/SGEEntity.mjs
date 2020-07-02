@@ -94,6 +94,15 @@ class SGEEntity {
 		}
 	}
 
+	get boundaries() {
+		return {
+			left: { a: { x: this.perimeter.left, y: this.perimeter.top }, b: { x: this.perimeter.left, y: this.perimeter.bottom } },
+			right: { a: { x: this.perimeter.right, y: this.perimeter.top }, b: { x: this.perimeter.right, y: this.perimeter.bottom }},
+			top: { a: { x: this.perimeter.left, y: this.perimeter.top }, b: { x: this.perimeter.right, y: this.perimeter.top }},
+			bottom: { a: { x: this.perimeter.left, y: this.perimeter.bottom }, b: { x: this.perimeter.right, y: this.perimeter.bottom }}
+		}
+	}
+
 	get center() {
 		return { x: this.x + this.texture.width / 2, y: this.y + this.texture.height / 2 }
 	}
