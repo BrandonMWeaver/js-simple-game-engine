@@ -50,26 +50,25 @@ function respondToAction() {
 	ship.xSpeed = 0;
 	ship.ySpeed = 0;
 	const collisionInformation = ship.sideCollidedWithAny(enemies);
-	const shipAngle = ship.rotation * 180 / Math.PI;
 	controller.respond(87, function() {
-		if ((ship.perimeter.left > background.perimeter.left || Math.sign(shipAngle) === 1)
-		&& (ship.perimeter.right < background.perimeter.right || Math.sign(shipAngle) === -1)) {
+		if ((ship.perimeter.left > background.perimeter.left || Math.sign(ship.angle) === 1)
+		&& (ship.perimeter.right < background.perimeter.right || Math.sign(ship.angle) === -1)) {
 			ship.xSpeed = 1;
 		}
-		if ((ship.perimeter.top > background.perimeter.top || !(shipAngle >= -90 && shipAngle <= 90))
-		&& (ship.perimeter.bottom < background.perimeter.bottom || (shipAngle >= -90 && shipAngle <= 90))) {
+		if ((ship.perimeter.top > background.perimeter.top || !(ship.angle >= -90 && ship.angle <= 90))
+		&& (ship.perimeter.bottom < background.perimeter.bottom || (ship.angle >= -90 && ship.angle <= 90))) {
 			ship.ySpeed = 1;
 		}
-		if (collisionInformation.includes("left") && Math.sign(shipAngle) === -1) {
+		if (collisionInformation.includes("left") && Math.sign(ship.angle) === -1) {
 			ship.xSpeed = 0;
 		}
-		if (collisionInformation.includes("right") && Math.sign(shipAngle) === 1) {
+		if (collisionInformation.includes("right") && Math.sign(ship.angle) === 1) {
 			ship.xSpeed = 0;
 		}
-		if (collisionInformation.includes("top") && shipAngle >= -90 && shipAngle <= 90) {
+		if (collisionInformation.includes("top") && ship.angle >= -90 && ship.angle <= 90) {
 			ship.ySpeed = 0;
 		}
-		if (collisionInformation.includes("bottom") && !(shipAngle >= -90 && shipAngle <= 90)) {
+		if (collisionInformation.includes("bottom") && !(ship.angle >= -90 && ship.angle <= 90)) {
 			ship.ySpeed = 0;
 		}
 	});

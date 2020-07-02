@@ -97,6 +97,10 @@ class SGEEntity {
 	get center() {
 		return { x: this.x + this.texture.width / 2, y: this.y + this.texture.height / 2 }
 	}
+
+	get angle() {
+		return this.rotation * 180 / Math.PI;
+	}
 }
 
 export default SGEEntity;
