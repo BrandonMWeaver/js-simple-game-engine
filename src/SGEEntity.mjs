@@ -2,6 +2,7 @@ class SGEEntity {
 	constructor(context, texture, x = 0, y = 0, rotation = 0, speed = 0, destination = null) {
 		this.context = context;
 		this.texture = new Image();
+		this.primaryTextureSource = texture;
 		this.texture.src = texture;
 		this.x = x;
 		this.y = y;

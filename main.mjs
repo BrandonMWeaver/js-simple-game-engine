@@ -1,3 +1,4 @@
+import SGEAnimator from './src/SGEAnimator.mjs';
 import SGECanvas from './src/SGECanvas.mjs';
 import SGEController from './src/SGEController.mjs';
 import SGEEntity from './src/SGEEntity.mjs';
@@ -7,6 +8,15 @@ const engineCanvas = new SGECanvas(1280, 720, document.querySelector(".container
 
 const background = new SGEEntity(engineCanvas.context, "./textures/background.png");
 const ship = new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 620, 660);
+const shipAnimator = new SGEAnimator(
+	[
+		"./textures/ship-1-turbo-1.png",
+		"./textures/ship-1-turbo-2.png",
+		"./textures/ship-1-turbo-3.png",
+		"./textures/ship-1-turbo-4.png",
+		"./textures/ship-1-turbo-5.png"
+	]
+);
 const crosshair = new SGEEntity(engineCanvas.context, "./textures/crosshair.png");
 const ray = new SGERay(engineCanvas.context);
 const intersection = new SGEEntity(engineCanvas.context, "./textures/crosshair.png");
@@ -57,7 +67,7 @@ function update() {
 		x: controller.mouse.x + 10,
 		y: controller.mouse.y + 10
 	}
-	let pts = [];
+	let pts = [ray.dir];
 	for (const enemy of enemies) {
 		pts = [
 			...pts,
@@ -69,11 +79,6 @@ function update() {
 		for (let i = pts.length - 1; i >= 0; i--) {
 			if (pts[i] === null)
 				pts.splice(i, 1);
-			//else {
-			//	intersection.x = pts[i].x - 10;
-			//	intersection.y = pts[i].y - 10;
-			//	intersection.update();
-			//}
 		}
 	}
 	const pt = ray.findClosestPoint(pts);
@@ -92,6 +97,12 @@ function update() {
 function respondToAction() {
 	ship.xSpeed = 0;
 	ship.ySpeed = 0;
+	if (controller.keys[87]) {
+		shipAnimator.animate(ship, 10);
+	}
+	else {
+		shipAnimator.endAnimation(ship);
+	}
 	const collisionInformation = ship.sideCollidedWithAny(enemies);
 	controller.respond(87, function() {
 		if ((ship.perimeter.left > background.perimeter.left || Math.sign(ship.angle) === 1)
@@ -122,7 +133,7 @@ function respondToAction() {
 					engineCanvas.context,
 					"./textures/bullet.png",
 					ship.center.x - 2 + (Math.sin(ship.rotation) * 25), ship.center.y - 4 - (Math.cos(ship.rotation) * 25), ship.rotation,
-					3,
+					5,
 					{ x: controller.mouse.x + 10, y: controller.mouse.y + 10 }
 				)
 			);
