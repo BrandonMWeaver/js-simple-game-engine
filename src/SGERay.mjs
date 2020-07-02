@@ -9,7 +9,7 @@ class SGERay {
 		this.context.beginPath();
 		this.context.moveTo(this.pos.x, this.pos.y);
 		this.context.lineTo(this.dir.x, this.dir.y);
-		this.context.strokeStyle = "#F00"; // Remove after testing
+		this.context.strokeStyle = "#00F"; // Remove after testing
 		this.context.stroke();
 	}
 
@@ -25,7 +25,7 @@ class SGERay {
 		const y4 = this.dir.y;
 	
 		const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-		if (den == 0) return null;
+		if (den === 0) return null;
 	
 		const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / den;
 		const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / den;
@@ -37,6 +37,19 @@ class SGERay {
 			}
 		}
 		else return null;
+	}
+
+	findClosestPoint(points) {
+		let minDistance = Infinity;
+		let closestPoint = null;
+		for (const point of points) {
+			const distance = Math.sqrt(Math.pow(this.pos.x - point.x, 2) + Math.pow(this.pos.y - point.y, 2));
+			if (distance < minDistance) {
+				minDistance = distance;
+				closestPoint = point;
+			}
+		}
+		return closestPoint;
 	}
 }
 

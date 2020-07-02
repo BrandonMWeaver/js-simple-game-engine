@@ -7,6 +7,7 @@ const engineCanvas = new SGECanvas(1280, 720, document.querySelector(".container
 
 const background = new SGEEntity(engineCanvas.context, "./textures/background.png");
 const ship = new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 620, 660);
+const crosshair = new SGEEntity(engineCanvas.context, "./textures/crosshair.png");
 const ray = new SGERay(engineCanvas.context);
 const intersection = new SGEEntity(engineCanvas.context, "./textures/crosshair.png");
 const enemies = [
@@ -55,22 +56,36 @@ function update() {
 		x: controller.mouse.x + 10,
 		y: controller.mouse.y + 10
 	}
+	let pts = [];
 	for (const enemy of enemies) {
-		const pts = [
+		pts = [
+			...pts,
 			ray.cast(enemy.boundaries.left),
 			ray.cast(enemy.boundaries.right),
 			ray.cast(enemy.boundaries.top),
 			ray.cast(enemy.boundaries.bottom)
 		];
-		for (const pt of pts) {
-			if (pt) {
-				intersection.x = pt.x - 10,
-				intersection.y = pt.y - 10
-				intersection.update();
-			}
+		for (let i = pts.length - 1; i >= 0; i--) {
+			if (pts[i] === null)
+				pts.splice(i, 1);
+			//else {
+			//	intersection.x = pts[i].x - 10;
+			//	intersection.y = pts[i].y - 10;
+			//	intersection.update();
+			//}
 		}
 	}
+	const pt = ray.findClosestPoint(pts);
+	if (pt) {
+		intersection.x = pt.x - 10;
+		intersection.y = pt.y - 10;
+		intersection.update();
+	}
 	ray.update();
+	crosshair.update(null, function() {
+		crosshair.x = controller.mouse.x;
+		crosshair.y = controller.mouse.y;
+	});
 }
 
 function respondToAction() {
