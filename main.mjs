@@ -1,11 +1,16 @@
 import SGECanvas from './src/SGECanvas.mjs';
-import SGEEntity from './src/SGEEntity.mjs';
 import SGEController from './src/SGEController.mjs';
+import SGEEntity from './src/SGEEntity.mjs';
+import SGERay from './src/SGERay.mjs';
 
 const engineCanvas = new SGECanvas(1280, 720, document.querySelector(".container"));
 
 const background = new SGEEntity(engineCanvas.context, "./textures/background.png");
 const ship = new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 620, 660);
+const ray = new SGERay(engineCanvas.context);
+const intersection = new SGEEntity(engineCanvas.context, "./textures/crosshair.png");
+const wall = new SGERay(engineCanvas.context, { x: 50, y: 50 }, { x: 500, y: 50 });
+const wall2 = new SGERay(engineCanvas.context, { x: 100, y: 100 }, { x: 100, y: 10 });
 const enemies = [
 	new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 580, 340),
 	new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 620, 300),
@@ -44,6 +49,23 @@ function update() {
 	}
 	if (delay > 0)
 		delay--;
+	ray.pos = {
+		x: ship.center.x,
+		y: ship.center.y
+	}
+	ray.dir = {
+		x: controller.mouse.x + 10,
+		y: controller.mouse.y + 10
+	}
+	const pt = ray.cast({ a: { x: wall.pos.x, y: wall.pos.y }, b: { x: wall.dir.x, y: wall.dir.y } });
+	if (pt) {
+		intersection.x = pt.x - 10,
+		intersection.y = pt.y - 10
+		intersection.update();
+	}
+	ray.update();
+	wall.update();
+	wall2.update();
 }
 
 function respondToAction() {
