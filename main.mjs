@@ -9,6 +9,7 @@ const engineCanvas = new SGECanvas(1280, 720, document.querySelector(".container
 const background = new SGEEntity(engineCanvas.context, "./textures/background.png");
 const ship = new SGEEntity(engineCanvas.context, "./textures/ship-1.png", 620, 660);
 const shipAnimator = new SGEAnimator(
+	ship,
 	[
 		"./textures/ship-1-turbo-1.png",
 		"./textures/ship-1-turbo-2.png",
@@ -35,16 +36,19 @@ engineCanvas.start(update, 5);
 function update() {
 	respondToAction();
 	background.update();
-	for (const bullet of bullets) {
-		bullet.update(bullet.rotation, function() {
-			bullet.x += Math.sin(bullet.rotation) * bullet.xSpeed;
-			bullet.y -= Math.cos(bullet.rotation) * bullet.ySpeed;
+	for (let i = bullets.length - 1; i >= 0; i--) {
+		bullets[i].update(bullets[i].rotation, function() {
+			bullets[i].x += Math.sin(bullets[i].rotation) * bullets[i].xSpeed;
+			bullets[i].y -= Math.cos(bullets[i].rotation) * bullets[i].ySpeed;
 		});
-		for (let i = enemies.length - 1; i >= 0; i--) {
-			if (bullet.collidedWith(enemies[i])) {
-				enemies.splice(i, 1);
+		let bulletCollided = false;
+		for (let j = enemies.length - 1; j >= 0; j--) {
+			if (bullets[i].collidedWith(enemies[j])) {
+				enemies.splice(j, 1);
+				bulletCollided = true;
 			}
 		}
+		if (bulletCollided) bullets.splice(i, 1);
 	}
 	ray.update();
 	ship.update(Math.atan2(controller.mouse.x + 10 - ship.center.x, -(controller.mouse.y + 10 - ship.center.y)), function() {
@@ -98,10 +102,10 @@ function respondToAction() {
 	ship.xSpeed = 0;
 	ship.ySpeed = 0;
 	if (controller.keys[87]) {
-		shipAnimator.animate(ship, 10);
+		shipAnimator.animate(10);
 	}
 	else {
-		shipAnimator.endAnimation(ship);
+		shipAnimator.endAnimation();
 	}
 	const collisionInformation = ship.sideCollidedWithAny(enemies);
 	controller.respond(87, function() {
