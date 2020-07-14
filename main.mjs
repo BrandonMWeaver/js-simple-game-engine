@@ -1,4 +1,5 @@
 import SGEAnimator from './src/SGEAnimator.mjs';
+import SGEAudio from './src/SGEAudio.mjs';
 import SGECanvas from './src/SGECanvas.mjs';
 import SGEController from './src/SGEController.mjs';
 import SGEEntity from './src/SGEEntity.mjs';
@@ -28,6 +29,7 @@ const enemies = [
 ];
 const bullets = [];
 let delay = 0;
+const laserAudio = new SGEAudio("./audio/laser-1.wav");
 
 const controller = new SGEController();
 
@@ -132,6 +134,7 @@ function respondToAction() {
 	});
 	controller.respond(32, function() {
 		if (delay === 0) {
+			laserAudio.play();
 			bullets.push(
 				new SGEEntity(
 					engineCanvas.context,
